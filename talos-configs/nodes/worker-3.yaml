@@ -1,0 +1,15 @@
+machine:
+  network:
+    hostname: worker-3
+    interfaces:
+      - interface: ens18
+        addresses:
+          - 192.168.20.26/24 
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 192.168.20.1
+    nameservers:
+      - 192.168.20.1      
+      - 1.1.1.1         
+    searchDomains:
+      - home.arpa

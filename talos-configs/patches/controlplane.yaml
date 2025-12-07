@@ -1,0 +1,9 @@
+version: v1alpha1
+machine:
+  type: init            # first control-plane (bootstrap / etcd + API server)
+  token: REPLACE_WITH_YOUR_CLUSTER_TOKEN
+cluster:
+  controlPlane:
+    endpoint: https://CLUSTER_API:6443
+    localAPIServerPort: 6443
+  clusterName: my-tal os-cluster
