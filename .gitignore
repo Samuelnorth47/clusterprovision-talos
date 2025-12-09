@@ -1,3 +1,5 @@
 secrets.yaml
 encodedsecrets.yaml
 testprovisioncluster.yaml
+.terraform/
+*.hcl

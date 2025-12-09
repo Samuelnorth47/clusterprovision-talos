@@ -13,7 +13,7 @@ variable "vms" {
     iso_filename = string  
     bridge       = string
   }))
-  
+
   default = {
     "talos-node-0" = {
       name            = "talos-node-0"
@@ -27,4 +27,47 @@ variable "vms" {
       bridge          = "vmbr0"
     }
   }
+}
+
+variable "proxmox_node" {
+  description = "Proxmox API host (shortname or FQDN). If empty, falls back to env PROXMOX_NODE."
+  type        = string
+  default     = ""
+}
+
+variable "proxmox_api_user" {
+  description = "Proxmox API user part of the token (e.g. 'root@pam'). Falls back to PROXMOX_API_USER."
+  type        = string
+  default     = ""
+}
+
+variable "proxmox_api_token_id" {
+  description = "Proxmox API token ID. Falls back to PROXMOX_API_TOKEN_ID."
+  type        = string
+  default     = ""
+}
+
+variable "proxmox_api_token_secret" {
+  description = "Proxmox API token secret. Falls back to PROXMOX_API_TOKEN_SECRET."
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "proxmox_insecure" {
+  description = "Whether to skip TLS verification when talking to Proxmox."
+  type        = bool
+  default     = true
+}
+
+variable "proxmox_ssh_agent" {
+  description = "Whether to use local ssh-agent for provider ssh actions."
+  type        = bool
+  default     = true
+}
+
+variable "proxmox_ssh_username" {
+  description = "SSH username to use for provider SSH operations (if any)."
+  type        = string
+  default     = "root"
 }

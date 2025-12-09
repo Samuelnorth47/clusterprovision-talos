@@ -1,4 +1,3 @@
-# modules/proxmox_full_vm/variables.tf
 variable "name"        { type = string }
 variable "node_name"   { type = string }
 variable "memory_mb"   { type = number }

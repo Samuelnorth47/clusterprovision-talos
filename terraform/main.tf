@@ -1,3 +1,25 @@
+
+terraform {
+  required_providers {
+    proxmox = {
+      source  = "bpg/proxmox"
+      version = "~> 0.75.0"
+    }
+  }
+}
+
+provider "proxmox" {
+  endpoint = "https://${var.proxmox_node}:8006/"
+  api_token = "${var.proxmox_api_user}!${var.proxmox_api_token_id}=${var.proxmox_api_token_secret}"
+  insecure = true
+
+  ssh {
+    agent = true
+    username = "root"
+  }
+
+}
+
 module "proxmox_talos_master_1" {
   source         = "./modules/proxmox_terraform_vm"
   name           = "master-1"

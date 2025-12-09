@@ -1,4 +1,3 @@
-
 terraform {
   required_providers {
     proxmox = {
@@ -6,18 +5,6 @@ terraform {
       version = "~> 0.75.0"
     }
   }
-}
-
-provider "proxmox" {
-  endpoint = "https://${env("PROXMOX_NODE")}:8006/"
-  api_token = "${env("PROXMOX_API_USER")}!${env("PROXMOX_API_TOKEN_ID")}=${env("PROXMOX_API_TOKEN_SECRET")}"
-  insecure = true
-
-  ssh {
-    agent = true
-    username = "root"
-  }
-
 }
 resource "proxmox_virtual_environment_vm" "vm" {
   name      = var.name
