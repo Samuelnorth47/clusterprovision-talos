@@ -9,17 +9,17 @@ terraform {
 resource "proxmox_virtual_environment_vm" "vm" {
   name      = var.name
   node_name = var.node_name
-  
+
   agent {
     enabled = true
   }
- memory {
+  memory {
     dedicated = var.memory_mb
-    floating = var.memory_mb
+    floating  = var.memory_mb
   }
-  cpu { 
-    cores = var.cores 
-    type  = "host"  
+  cpu {
+    cores = var.cores
+    type  = "host"
   }
 
   disk {

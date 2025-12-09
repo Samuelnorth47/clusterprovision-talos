@@ -9,12 +9,12 @@ terraform {
 }
 
 provider "proxmox" {
-  endpoint = "https://${var.proxmox_node}:8006/"
+  endpoint  = "https://${var.proxmox_node}:8006/"
   api_token = "${var.proxmox_api_user}!${var.proxmox_api_token_id}=${var.proxmox_api_token_secret}"
-  insecure = true
+  insecure  = true
 
   ssh {
-    agent = true
+    agent    = true
     username = "root"
   }
 
