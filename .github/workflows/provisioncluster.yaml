@@ -9,7 +9,6 @@ jobs:
   terraform:
     runs-on: self-hosted 
     env:
-      # secrets stored securely in GitHub → used as env vars
       PROXMOX_NODE: mercury.proxmox.home.arpa
       PROXMOX_API_USER: root@pam
       PROXMOX_API_TOKEN_ID: terraform-token
