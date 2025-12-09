@@ -9,10 +9,10 @@ jobs:
   terraform:
     runs-on: self-hosted 
     env:
-      TF_VAR_PROXMOX_NODE: mercury.proxmox.home.arpa
-      TF_VAR_PROXMOX_API_USER: root@pam
-      TF_VAR_PROXMOX_API_TOKEN_ID: terraform-token
-      TF_VAR_PROXMOX_API_TOKEN_SECRET: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
+      TF_VAR_proxmox_node: mercury.proxmox.home.arpa
+      TF_VAR_proxmox_api_user: root@pam
+      TF_VAR_proxmox_api_token_id: terraform-token
+      TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
       
     steps:
       - name: Checkout code
