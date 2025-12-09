@@ -7,11 +7,6 @@ terraform {
     }
   }
 }
-provider "proxmox" {
-  endpoint  = env("PROXMOX_NODE")
-  username  = "${env("PROXMOX_API_USER")}!${env("PROXMOX_API_TOKEN_ID")}"
-  password  = env("PROXMOX_API_TOKEN_SECRET")
-}
 
 provider "proxmox" {
   endpoint = "https://${env("PROXMOX_NODE")}:8006/"
