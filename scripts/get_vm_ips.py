@@ -2,10 +2,10 @@ from proxmoxer import ProxmoxAPI
 import os
 # Connect to Proxmox (replace with your host / token or user+pass)
 proxmox = ProxmoxAPI(
-    os.env("PROXMOX_NODE"),
-    user=os.env("PROXMOX_API_USER"),
-    token_name= os.env("PROXMOX_API_TOKEN_ID"),
-    token_value=os.env("PROXMOX_API_TOKEN_SECRET"),
+    os.env("proxmox_node"),
+    user=os.env("proxmox_api_user"),
+    token_name= os.env("proxmox_api_token_id"),
+    token_value=os.env("proxmox_api_token_secret"),
     verify_ssl=False )
 
 def get_vm_ip(node: str, vmid: int):
