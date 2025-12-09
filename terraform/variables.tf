@@ -1,8 +1,8 @@
 variable "vms" {
   description = "Map of VMs to create"
   type = map(object({
-    name           = string 
-    node_name      = string 
+    name           = string
+    node_name      = string
     memory_mb      = number
     cores          = number
     disk_datastore = string
