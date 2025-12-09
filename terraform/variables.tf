@@ -1,10 +1,8 @@
-# variables.tf at root
-
 variable "vms" {
   description = "Map of VMs to create"
   type = map(object({
-    name           = string # VM name
-    node_name      = string # Proxmox host node
+    name           = string 
+    node_name      = string 
     memory_mb      = number
     cores          = number
     disk_datastore = string
