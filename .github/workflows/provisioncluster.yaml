@@ -53,7 +53,7 @@ jobs:
         run: python3 get_vm_ips.py
       
   bootstrap-talos-cluster:
-    needs: talosctl
+    needs: terraform
     runs-on: self-hosted
     env:
       TALOS_CLUSTER_NAME: test-cluster
@@ -61,6 +61,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Check python version
+        run: talosctl version
 
       - name: Generate talos secrets
         run: talosctl gen secrets -o secrets.yaml
