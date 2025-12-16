@@ -1,6 +1,8 @@
+version: v1alpha1
 machine:
   network:
     hostname: master-3
     interfaces:
+      - interface: ens18
         addresses:
           - 192.168.20.22/24 
