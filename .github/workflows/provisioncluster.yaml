@@ -13,6 +13,10 @@ jobs:
       TF_VAR_proxmox_api_user: root@pam
       TF_VAR_proxmox_api_token_id: terraform-token
       TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
+      proxmox_node: mercury.proxmox.home.arpa
+      proxmox_api_user: root@pam
+      proxmox_api_token_id: terraform-token
+      proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
       
     steps:
       - name: Checkout code
