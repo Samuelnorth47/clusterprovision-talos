@@ -66,7 +66,7 @@ jobs:
         run: talosctl gen secrets -o secrets.yaml
 
       - name: Generate talos and patch configs
-        run: talosctl gen config --with-secrets secrets.yaml  ${{ env.TALOS_CLUSTER_NAME }} ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
+        run: talosctl gen config --with-secrets secrets.yaml \
           --config-patch @patches/global.yaml \
           --config-patch-master @patches/master-1.yaml \
           --config-patch-master @patches/master-2.yaml \
@@ -75,7 +75,9 @@ jobs:
           --config-patch-worker @patches/worker-2.yaml \
           --config-patch-worker @patches/worker-3.yaml \
           --output-types controlplane,worker,talosconfig \
-          --output ./machine-configs
+          --output ./machine-configs \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
       
       
       - name: Apply machine configs
