@@ -1,22 +1,20 @@
-version: v1alpha1
-persist: true
-
 cluster:
-  clusterName: test-cluster
-  id: my-cluster-id-1234       # optional; if omitted Talos auto-generates
-  secret: TEST-SECRET-PLACEHOLDER  # This will be filled via secrets.yaml on generation
   controlPlane:
-    endpoint: https://192.168.20.20:6443    # your control-plane VIP or first node IP
     localAPIServerPort: 443
-  network:
+  network:        
     cni:
-      name: flannel     # or leave empty for default
-    dnsDomain: cluster.local
-    podSubnets:
-      - 10.244.0.0/16
-    serviceSubnets:
-      - 10.96.0.0/12
-  token: "k7o0ot.rsn3cpc11t2tv6mo"   # bootstrap token (from secrets.yaml)
-  ca:                # root CA info (implicitly from secrets.yaml)
-    crt: ""          # popualated at generation time
-    key: ""          # popualated at generation time
+      name: none
+machine:
+  network:
+    interfaces: 
+      - interface: ens18
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 192.168.20.1
+    nameservers:
+      - 192.168.20.1
+      - 1.1.1.1
+    searchDomains:
+      - home.arpa
+      - proxmox.home.arpa
+      - storage.home.arpa

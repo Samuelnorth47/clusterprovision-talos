@@ -1,6 +1,0 @@
-version: v1alpha1
-machine:
-  type: worker
-  token: REPLACE_WITH_SAME_CLUSTER_TOKEN
-cluster:
-  clusterName: my-tal os-cluster

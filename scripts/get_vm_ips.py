@@ -23,8 +23,9 @@ def get_vm_ip(node: str, vmid: int):
                 return ipinfo.get("ip-address")
     return None
 
-for vm in proxmox.nodes("mercury").qemu.get():
-    vmid = vm["vmid"]
-    name = vm["name"]
-    ip = get_vm_ip("mercury", vmid)
-    print(f"VM {name} (ID {vmid}) → IP: {ip}")
+with open(os.environ["GITHUB_ENV"], "a") as fh:
+    for vm in proxmox.nodes("mercury").qemu.get():
+        name = vm["name"].replace(" ", "_")
+        ip = get_vm_ip("mercury", vm["vmid"])
+        if ip:
+            fh.write(f"{name}_IP={ip}\n")

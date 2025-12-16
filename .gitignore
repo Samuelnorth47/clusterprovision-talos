@@ -3,3 +3,6 @@ encodedsecrets.yaml
 testprovisioncluster.yaml
 .terraform/
 *.hcl
+controlplane.yaml
+worker.yaml
+talosconfig
