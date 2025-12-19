@@ -68,7 +68,7 @@ jobs:
       - name: Generate machine configs with patches
         run: |
 
-          talosctl gen config  
+          talosctl gen config  \
           ${{ env.TALOS_CLUSTER_NAME }} \
           ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
@@ -77,7 +77,7 @@ jobs:
           --output ./machine-configs/talosconfig \
          
 
-          talosctl gen config 
+          talosctl gen config \
           ${{ env.TALOS_CLUSTER_NAME }} \
           ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
@@ -86,7 +86,7 @@ jobs:
           --output-types controlplane,talosconfig \
           --output ./machine-configs/master-1.yaml 
 
-          talosctl gen config 
+          talosctl gen config \
           ${{ env.TALOS_CLUSTER_NAME }} \
           ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
@@ -95,7 +95,7 @@ jobs:
           --output-types controlplane \
           --output ./machine-configs/master-2.yaml 
 
-          talosctl gen config 
+          talosctl gen config \
           ${{ env.TALOS_CLUSTER_NAME }} \
           ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
@@ -104,7 +104,7 @@ jobs:
           --output-types controlplane \
           --output ./machine-configs/master-3.yaml 
           
-          talosctl gen config 
+          talosctl gen config \
           ${{ env.TALOS_CLUSTER_NAME }} \
           ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
@@ -113,7 +113,7 @@ jobs:
           --output-types worker \
           --output ./machine-configs/worker-1.yaml 
           
-          talosctl gen config 
+          talosctl gen config \
           ${{ env.TALOS_CLUSTER_NAME }} \
           ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
@@ -122,7 +122,7 @@ jobs:
           --output-types worker \
           --output ./machine-configs/worker-2.yaml 
 
-          talosctl gen config 
+          talosctl gen config \
           ${{ env.TALOS_CLUSTER_NAME }} \
           ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
