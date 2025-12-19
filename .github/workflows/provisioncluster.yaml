@@ -133,27 +133,27 @@ jobs:
 
       - name: debug
         run: |
-          echo "${{ env.master-1_IP }}" 
-          echo "${{ env.master-2_IP }}" 
-          echo "${{ env.worker-2_IP }}" 
+          echo $master-1_IP
+          echo $master-2_IP
+          echo $worker-2_IP
 
       
       - name: Apply machine configs
         working-directory: ./machine-configs
         run: |
-          talosctl apply-config --insecure --nodes "${{ env.master-1_IP }}" --file master-1.yaml
-          talosctl apply-config --insecure --nodes "${{ env.master-2_IP }}" --file master-2.yaml
-          talosctl apply-config --insecure --nodes "${{ env.master-3_IP }}" --file master-3.yaml
-          talosctl apply-config --insecure --nodes "${{ env.worker-1_IP }}" --file worker-1.yaml
-          talosctl apply-config --insecure --nodes "${{ env.worker-2_IP }}" --file worker-2.yaml
-          talosctl apply-config --insecure --nodes "${{ env.worker-3_IP }}" --file worker-3.yaml
+          talosctl apply-config --insecure --nodes $master-1_IP --file master-1.yaml
+          talosctl apply-config --insecure --nodes $master-2_IP --file master-2.yaml
+          talosctl apply-config --insecure --nodes $master-3_IP --file master-3.yaml
+          talosctl apply-config --insecure --nodes $worker-1_IP --file worker-1.yaml
+          talosctl apply-config --insecure --nodes $worker-2_IP --file worker-2.yaml
+          talosctl apply-config --insecure --nodes $worker-3_IP --file worker-3.yaml
       
       - name: Bootstrap control plane
-        run: talosctl bootstrap --nodes "${{ env.master-1_IP }}" --talosconfig ./machine-configs/talosconfig
+        run: talosctl bootstrap --nodes $master-1_IP --talosconfig ./machine-configs/talosconfig
     
       - name: Wait for Talos health
         run: |
-          until talosctl --nodes "$master-1_IP" --talosconfig ./talosconfig health; do
+          until talosctl --nodes $master-1_IP --talosconfig ./talosconfig health; do
             echo "Waiting for talos health..."
             sleep 10
           done
