@@ -65,18 +65,79 @@ jobs:
       - name: Generate talos secrets
         run: talosctl gen secrets -o secrets.yaml
 
-      - name: Generate talos and patch configs
-        run: talosctl gen config --with-secrets secrets.yaml ${{ env.TALOS_CLUSTER_NAME }} ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} --config-patch @patches/global.yaml --config-patch-control-plane @patches/master-1.yaml --config-patch-control-plane @patches/master-2.yaml  --config-patch-control-plane @patches/master-3.yaml  --config-patch-worker @patches/worker-1.yaml  --config-patch-worker @patches/worker-2.yaml  --config-patch-worker @patches/worker-3.yaml --output-types controlplane,worker,talosconfig --output ./machine-configs 
+      - name: Generate machine configs with patches
+        run: |
+
+          talosctl gen config \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --output-types talosconfig \
+          --output ./machine-configs/talosconfig \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+
+          talosctl gen config \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-control-plane @patches/master-1.yaml \
+          --output-types controlplane,talosconfig \
+          --output ./machine-configs/master-1.yaml \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+
+          talosctl gen config \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-control-plane @patches/master-2.yaml \
+          --output-types controlplane \
+          --output ./machine-configs/master-2.yaml \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+
+          talosctl gen config \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-control-plane @patches/master-3.yaml \
+          --output-types controlplane \
+          --output ./machine-configs/master-3.yaml \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+          
+          talosctl gen config \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-control-plane @patches/worker-1.yaml \
+          --output-types worker \
+          --output ./machine-configs/worker-1.yaml \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          
+          talosctl gen config \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-control-plane @patches/worker-2.yaml \
+          --output-types worker \
+          --output ./machine-configs/worker-2.yaml \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+
+          talosctl gen config \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-control-plane @patches/worker-3.yaml \
+          --output-types worker \
+          --output ./machine-configs/worker-3.yaml \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
 
       - name: Apply machine configs
         working-directory: ./machine-configs
         run: |
-          talosctl apply-config --insecure --nodes "${{ env.worker-1_IP }}" --file worker-1.yaml
-          talosctl apply-config --insecure --nodes "${{ env.worker-2_IP }}" --file worker-2.yaml
-          talosctl apply-config --insecure --nodes "${{ env.worker-3_IP }}" --file worker-3.yaml
           talosctl apply-config --insecure --nodes "${{ env.master-1_IP }}" --file master-1.yaml
           talosctl apply-config --insecure --nodes "${{ env.master-2_IP }}" --file master-2.yaml
           talosctl apply-config --insecure --nodes "${{ env.master-3_IP }}" --file master-3.yaml
+          talosctl apply-config --insecure --nodes "${{ env.worker-1_IP }}" --file worker-1.yaml
+          talosctl apply-config --insecure --nodes "${{ env.worker-2_IP }}" --file worker-2.yaml
+          talosctl apply-config --insecure --nodes "${{ env.worker-3_IP }}" --file worker-3.yaml
       
       - name: Bootstrap control plane
         run: talosctl bootstrap --nodes "${{ env.master-1_IP }}" --talosconfig ./machine-configs/talosconfig
