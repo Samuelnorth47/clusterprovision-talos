@@ -29,3 +29,4 @@ with open(os.environ["GITHUB_ENV"], "a") as fh:
         ip = get_vm_ip("mercury", vm["vmid"])
         if ip:
             fh.write(f"{name}_IP={ip}\n")
+            print(f"Found IP for {name}: {ip}")
