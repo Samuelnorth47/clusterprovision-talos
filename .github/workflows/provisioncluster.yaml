@@ -131,6 +131,13 @@ jobs:
           --output-types worker \
           --output ./machine-configs/worker-3.yaml 
 
+      - name: debug
+        run: |
+          echo "${{ env.master-1_IP }}" 
+          echo "${{ env.master-2_IP }}" 
+          echo "${{ env.worker-2_IP }}" 
+
+      
       - name: Apply machine configs
         working-directory: ./machine-configs
         run: |
