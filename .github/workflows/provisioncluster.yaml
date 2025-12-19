@@ -68,66 +68,68 @@ jobs:
       - name: Generate machine configs with patches
         run: |
 
-          talosctl gen config \
+          talosctl gen config  
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
           --config-patch @patches/global.yaml \
           --output-types talosconfig \
           --output ./machine-configs/talosconfig \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+         
 
-          talosctl gen config \
+          talosctl gen config 
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
           --config-patch @patches/global.yaml \
           --config-patch-control-plane @patches/master-1.yaml \
           --output-types controlplane,talosconfig \
-          --output ./machine-configs/master-1.yaml \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+          --output ./machine-configs/master-1.yaml 
 
-          talosctl gen config \
+          talosctl gen config 
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
           --config-patch @patches/global.yaml \
           --config-patch-control-plane @patches/master-2.yaml \
           --output-types controlplane \
-          --output ./machine-configs/master-2.yaml \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+          --output ./machine-configs/master-2.yaml 
 
-          talosctl gen config \
+          talosctl gen config 
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
           --config-patch @patches/global.yaml \
           --config-patch-control-plane @patches/master-3.yaml \
           --output-types controlplane \
-          --output ./machine-configs/master-3.yaml \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+          --output ./machine-configs/master-3.yaml 
           
-          talosctl gen config \
+          talosctl gen config 
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
           --config-patch @patches/global.yaml \
           --config-patch-control-plane @patches/worker-1.yaml \
           --output-types worker \
-          --output ./machine-configs/worker-1.yaml \
-          ${{ env.TALOS_CLUSTER_NAME }} \
+          --output ./machine-configs/worker-1.yaml 
           
-          talosctl gen config \
+          talosctl gen config 
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
           --config-patch @patches/global.yaml \
           --config-patch-control-plane @patches/worker-2.yaml \
           --output-types worker \
-          --output ./machine-configs/worker-2.yaml \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+          --output ./machine-configs/worker-2.yaml 
 
-          talosctl gen config \
+          talosctl gen config 
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
           --with-secrets secrets.yaml \
           --config-patch @patches/global.yaml \
           --config-patch-control-plane @patches/worker-3.yaml \
           --output-types worker \
-          --output ./machine-configs/worker-3.yaml \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }}
+          --output ./machine-configs/worker-3.yaml 
 
       - name: Apply machine configs
         working-directory: ./machine-configs
