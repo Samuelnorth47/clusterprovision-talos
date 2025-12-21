@@ -147,7 +147,7 @@ jobs:
           talosctl apply-config --insecure --nodes ${{ env.worker-3_IP }} --file worker-3.yaml
       
       - name: Bootstrap control plane
-        run: talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --talosconfig ./machine-configs/talosconfig
+        run: talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000  --talosconfig ./machine-configs/talosconfig
 
       - name: Wait for Talos health
         run: |
