@@ -39,141 +39,137 @@ jobs:
         working-directory: ./terraform
         run: terraform apply -input=false -auto-approve
   
-  # bootstrap-talos-cluster:
-  #   needs: terraform
-  #   runs-on: self-hosted
-  #   env:
-  #     TALOS_CLUSTER_NAME: test-cluster
-  #     TALOS_CONTROL_PLANE_ENDPOINT: https://192.168.20.20:6443
-  #     proxmox_node: mercury.proxmox.home.arpa
-  #     proxmox_api_user: root@pam
-  #     proxmox_api_token_id: terraform-token
-  #     proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
-  #     bootstrap_ip: 192.168.20.20
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  bootstrap-talos-cluster:
+    needs: terraform
+    runs-on: self-hosted
+    env:
+      TALOS_CLUSTER_NAME: test-cluster
+      TALOS_CONTROL_PLANE_ENDPOINT: https://192.168.20.20:6443
+      proxmox_node: mercury.proxmox.home.arpa
+      proxmox_api_user: root@pam
+      proxmox_api_token_id: terraform-token
+      proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
+      bootstrap_ip: 192.168.20.20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       
-  #     - name: Check python version
-  #       run: python --version
+      - name: Check python version
+        run: python --version
 
-  #     - name: Install dependencies
-  #       working-directory: ./scripts
-  #       run: |
-  #         python -m pip install --upgrade pip setuptools wheel
-  #         pip install -r requirements.txt
+      - name: Install dependencies
+        working-directory: ./scripts
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
 
-  #     - name: VM IP Output
-  #       working-directory: ./scripts
-  #       run: python3 get_vm_ips.py
+      - name: VM IP Output
+        working-directory: ./scripts
+        run: python3 get_vm_ips.py
 
-  #     - name: Generate talos secrets
-  #       run: talosctl gen secrets -o secrets.yaml
+      - name: Generate talos secrets
+        run: talosctl gen secrets -o secrets.yaml
 
-  #     - name: Generate machine configs with patches
-  #       run: |
+      - name: Generate machine configs with patches
+        run: |
 
-  #         talosctl gen config  \
-  #         ${{ env.TALOS_CLUSTER_NAME }} \
-  #         ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-  #         --with-secrets secrets.yaml \
-  #         --config-patch @patches/global.yaml \
-  #         --output-types talosconfig \
-  #         --output ./machine-configs/talosconfig \
+          talosctl gen config  \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --output-types talosconfig \
+          --output ./machine-configs/talosconfig \
          
 
-  #         talosctl gen config \
-  #         ${{ env.TALOS_CLUSTER_NAME }} \
-  #         ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-  #         --with-secrets secrets.yaml \
-  #         --config-patch @patches/global.yaml \
-  #         --config-patch-control-plane @patches/master-1.yaml \
-  #         --output-types controlplane \
-  #         --output ./machine-configs/master-1.yaml 
+          talosctl gen config \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-control-plane @patches/master-1.yaml \
+          --output-types controlplane \
+          --output ./machine-configs/master-1.yaml 
 
-  #         talosctl gen config \
-  #         ${{ env.TALOS_CLUSTER_NAME }} \
-  #         ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-  #         --with-secrets secrets.yaml \
-  #         --config-patch @patches/global.yaml \
-  #         --config-patch-control-plane @patches/master-2.yaml \
-  #         --output-types controlplane \
-  #         --output ./machine-configs/master-2.yaml 
+          talosctl gen config \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-control-plane @patches/master-2.yaml \
+          --output-types controlplane \
+          --output ./machine-configs/master-2.yaml 
 
-  #         talosctl gen config \
-  #         ${{ env.TALOS_CLUSTER_NAME }} \
-  #         ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-  #         --with-secrets secrets.yaml \
-  #         --config-patch @patches/global.yaml \
-  #         --config-patch-control-plane @patches/master-3.yaml \
-  #         --output-types controlplane \
-  #         --output ./machine-configs/master-3.yaml 
+          talosctl gen config \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-control-plane @patches/master-3.yaml \
+          --output-types controlplane \
+          --output ./machine-configs/master-3.yaml 
           
-  #         talosctl gen config \
-  #         ${{ env.TALOS_CLUSTER_NAME }} \
-  #         ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-  #         --with-secrets secrets.yaml \
-  #         --config-patch @patches/global.yaml \
-  #         --config-patch-control-plane @patches/worker-1.yaml \
-  #         --output-types worker \
-  #         --output ./machine-configs/worker-1.yaml 
+          talosctl gen config \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-worker @patches/worker-1.yaml \
+          --output-types worker \
+          --output ./machine-configs/worker-1.yaml 
           
-  #         talosctl gen config \
-  #         ${{ env.TALOS_CLUSTER_NAME }} \
-  #         ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-  #         --with-secrets secrets.yaml \
-  #         --config-patch @patches/global.yaml \
-  #         --config-patch-control-plane @patches/worker-2.yaml \
-  #         --output-types worker \
-  #         --output ./machine-configs/worker-2.yaml 
+          talosctl gen config \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-worker @patches/worker-2.yaml \
+          --output-types worker \
+          --output ./machine-configs/worker-2.yaml 
 
-  #         talosctl gen config \
-  #         ${{ env.TALOS_CLUSTER_NAME }} \
-  #         ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-  #         --with-secrets secrets.yaml \
-  #         --config-patch @patches/global.yaml \
-  #         --config-patch-control-plane @patches/worker-3.yaml \
-  #         --output-types worker \
-  #         --output ./machine-configs/worker-3.yaml 
+          talosctl gen config \
+          ${{ env.TALOS_CLUSTER_NAME }} \
+          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
+          --with-secrets secrets.yaml \
+          --config-patch @patches/global.yaml \
+          --config-patch-worker @patches/worker-3.yaml \
+          --output-types worker \
+          --output ./machine-configs/worker-3.yaml 
 
-  #     - name: Apply machine configs
-  #       working-directory: ./machine-configs
-  #       run: |
-  #         talosctl apply-config --insecure --nodes ${{ env.master-1_IP }} --file master-1.yaml
-  #         talosctl apply-config --insecure --nodes ${{ env.master-2_IP }} --file master-2.yaml
-  #         talosctl apply-config --insecure --nodes ${{ env.master-3_IP }} --file master-3.yaml
-  #         talosctl apply-config --insecure --nodes ${{ env.worker-1_IP }} --file worker-1.yaml
-  #         talosctl apply-config --insecure --nodes ${{ env.worker-2_IP }} --file worker-2.yaml
-  #         talosctl apply-config --insecure --nodes ${{ env.worker-3_IP }} --file worker-3.yaml
-      
-  #     - name: Wait until nodes are reachable
-  #       run: |
-  #         until talosctl version --nodes 192.168.20.20 --endpoints 192.168.20.20:50000 --talosconfig ./machine-configs/talosconfig; do
-  #           sleep 5
-  #         done
+      - name: Apply machine configs
+        working-directory: ./machine-configs
+        run: |
+          talosctl apply-config --insecure --nodes ${{ env.master-1_IP }} --file master-1.yaml
+          talosctl apply-config --insecure --nodes ${{ env.master-2_IP }} --file master-2.yaml
+          talosctl apply-config --insecure --nodes ${{ env.master-3_IP }} --file master-3.yaml
+          talosctl apply-config --insecure --nodes ${{ env.worker-1_IP }} --file worker-1.yaml
+          talosctl apply-config --insecure --nodes ${{ env.worker-2_IP }} --file worker-2.yaml
+          talosctl apply-config --insecure --nodes ${{ env.worker-3_IP }} --file worker-3.yaml
 
-  #     - name: Bootstrap control plane
-  #       run: talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./machine-configs/talosconfig
+      - name: Bootstrap control plane
+        run: |
+          sleep 30
+          talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./machine-configs/talosconfig
 
-  #     - name: Wait for Talos health
-  #       run: |
-  #         until talosctl --nodes ${{ env.bootstrap_ip }} --talosconfig ./talosconfig health; do
-  #           echo "Waiting for talos health..."
-  #           sleep 10
-  #         done
+      - name: Wait for Talos health
+        run: |
+          until talosctl --nodes ${{ env.bootstrap_ip }} --talosconfig ./talosconfig health; do
+            echo "Waiting for talos health..."
+            sleep 10
+          done
 
-  #     - name: Retrieve kubeconfig
-  #       run: |
-  #         talosctl kubeconfig --nodes "${{ env.bootstrap_ip }}" --talosconfig ./talosconfig > kubeconfig.yaml
-  #         echo "Kubeconfig saved."
+      - name: Retrieve kubeconfig
+        run: |
+          talosctl kubeconfig --nodes "${{ env.bootstrap_ip }}" --talosconfig ./talosconfig > kubeconfig.yaml
+          echo "Kubeconfig saved."
 
-  #     - name: Set KUBECONFIG
-  #       run: |
-  #         echo "export KUBECONFIG=$(pwd)/kubeconfig.yaml" >> $GITHUB_ENV
+      - name: Set KUBECONFIG
+        run: |
+          echo "export KUBECONFIG=$(pwd)/kubeconfig.yaml" >> $GITHUB_ENV
 
-  #     - name: Wait for Kubernetes nodes
-  #       run: |
-  #         until kubectl get nodes | grep Ready; do
-  #           echo "Waiting for kubernetes nodes"
-  #           sleep 10
-  #         done
+      - name: Wait for Kubernetes nodes
+        run: |
+          until kubectl get nodes | grep Ready; do
+            echo "Waiting for kubernetes nodes"
+            sleep 10
+          done
