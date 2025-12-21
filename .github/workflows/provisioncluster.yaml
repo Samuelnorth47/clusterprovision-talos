@@ -65,8 +65,16 @@ jobs:
       - name: VM IP Output
         working-directory: ./scripts
         run: python3 get_vm_ips.py
-      
 
+
+      - name: debug
+        run: |
+          echo $master-1_IP /
+          echo $master-2_IP /
+          echo $worker-2_IP /
+          echo ${{ env.master-1_IP }} /
+          echo ${{ env.master-2_IP }} /
+          echo ${{ env.worker-2_IP }}
 
       - name: Generate talos secrets
         run: talosctl gen secrets -o secrets.yaml
@@ -137,13 +145,6 @@ jobs:
           --output-types worker \
           --output ./machine-configs/worker-3.yaml 
 
-      - name: debug
-        run: |
-          echo $master-1_IP
-          echo $master-2_IP
-          echo $worker-2_IP
-
-      
       - name: Apply machine configs
         working-directory: ./machine-configs
         run: |
