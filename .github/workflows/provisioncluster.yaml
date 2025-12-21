@@ -49,6 +49,7 @@ jobs:
       proxmox_api_user: root@pam
       proxmox_api_token_id: terraform-token
       proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
+      boostrap_ip: 192.168.20.20
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -146,18 +147,18 @@ jobs:
           talosctl apply-config --insecure --nodes ${{ env.worker-3_IP }} --file worker-3.yaml
       
       - name: Bootstrap control plane
-        run: talosctl bootstrap --nodes ${{ env.master-1_IP }} --talosconfig ./machine-configs/talosconfig
+        run: talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --talosconfig ./machine-configs/talosconfig
 
       - name: Wait for Talos health
         run: |
-          until talosctl --nodes ${{ env.master-1_IP }} --talosconfig ./talosconfig health; do
+          until talosctl --nodes ${{ env.bootstrap_ip }} --talosconfig ./talosconfig health; do
             echo "Waiting for talos health..."
             sleep 10
           done
 
       - name: Retrieve kubeconfig
         run: |
-          talosctl kubeconfig --nodes "${{ env.master-1_IP }}" --talosconfig ./talosconfig > kubeconfig.yaml
+          talosctl kubeconfig --nodes "${{ env.bootstrap_ip }}" --talosconfig ./talosconfig > kubeconfig.yaml
           echo "Kubeconfig saved."
 
       - name: Set KUBECONFIG
