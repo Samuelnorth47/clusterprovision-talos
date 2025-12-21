@@ -87,7 +87,7 @@ jobs:
           --with-secrets secrets.yaml \
           --config-patch @patches/global.yaml \
           --config-patch-control-plane @patches/master-1.yaml \
-          --output-types controlplane,talosconfig \
+          --output-types controlplane \
           --output ./machine-configs/master-1.yaml 
 
           talosctl gen config \
@@ -136,13 +136,14 @@ jobs:
           --output ./machine-configs/worker-3.yaml 
 
       - name: Apply machine configs
+        working-directory: ./machine-configs
         run: |
-          talosctl apply-config --insecure --nodes ${{ env.master-1_IP }} --file ./machine-configs/master-1.yaml
-          talosctl apply-config --insecure --nodes ${{ env.master-2_IP }} --file ./machine-configs/master-2.yaml
-          talosctl apply-config --insecure --nodes ${{ env.master-3_IP }} --file ./machine-configs/master-3.yaml
-          talosctl apply-config --insecure --nodes ${{ env.worker-1_IP }} --file ./machine-configs/worker-1.yaml
-          talosctl apply-config --insecure --nodes ${{ env.worker-2_IP }} --file ./machine-configs/worker-2.yaml
-          talosctl apply-config --insecure --nodes ${{ env.worker-3_IP }} --file ./machine-configs/worker-3.yaml
+          talosctl apply-config --insecure --nodes ${{ env.master-1_IP }} --file master-1.yaml
+          talosctl apply-config --insecure --nodes ${{ env.master-2_IP }} --file master-2.yaml
+          talosctl apply-config --insecure --nodes ${{ env.master-3_IP }} --file master-3.yaml
+          talosctl apply-config --insecure --nodes ${{ env.worker-1_IP }} --file worker-1.yaml
+          talosctl apply-config --insecure --nodes ${{ env.worker-2_IP }} --file worker-2.yaml
+          talosctl apply-config --insecure --nodes ${{ env.worker-3_IP }} --file worker-3.yaml
       
       - name: Bootstrap control plane
         run: talosctl bootstrap --nodes ${{ env.master-1_IP }} --talosconfig ./machine-configs/talosconfig
