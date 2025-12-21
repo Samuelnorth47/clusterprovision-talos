@@ -146,10 +146,14 @@ jobs:
           talosctl apply-config --insecure --nodes ${{ env.worker-2_IP }} --file worker-2.yaml
           talosctl apply-config --insecure --nodes ${{ env.worker-3_IP }} --file worker-3.yaml
       
-      - name: Bootstrap control plane
+      - name: Wait until nodes are reachable
         run: |
-          sleep 10
-          talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }} --talosconfig ./machine-configs/talosconfig
+          until talosctl version --nodes 192.168.20.20 --endpoints 192.168.20.20:50000 --talosconfig ./machine-configs/talosconfig; do
+            sleep 5
+          done
+
+      - name: Bootstrap control plane
+        run: talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./machine-configs/talosconfig
 
       - name: Wait for Talos health
         run: |
