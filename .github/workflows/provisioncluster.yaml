@@ -151,13 +151,6 @@ jobs:
           sleep 30
           talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./machine-configs/talosconfig
 
-      - name: Wait for Talos health
-        run: |
-          until talosctl --nodes ${{ env.bootstrap_ip }} --talosconfig ./talosconfig health; do
-            echo "Waiting for talos health..."
-            sleep 10
-          done
-
       - name: Retrieve kubeconfig
         run: |
           talosctl kubeconfig --nodes "${{ env.bootstrap_ip }}" --talosconfig ./talosconfig > kubeconfig.yaml
