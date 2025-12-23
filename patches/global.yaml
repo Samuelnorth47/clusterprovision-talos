@@ -2,11 +2,6 @@ version: v1alpha1
 cluster:
   controlPlane:
     localAPIServerPort: 443
-  network:        
-    cni:
-      name: none
-  proxy:
-      disabled: true
 machine:
   network:
     interfaces: 
