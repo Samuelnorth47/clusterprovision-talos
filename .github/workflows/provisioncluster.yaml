@@ -153,7 +153,7 @@ jobs:
 
       - name: Retrieve kubeconfig
         run: |
-          talosctl kubeconfig --nodes "${{ env.bootstrap_ip }}" --talosconfig ./talosconfig > kubeconfig.yaml
+          talosctl kubeconfig --nodes ${{ env.bootstrap_ip }} --talosconfig ./machine-configs/talosconfig > kubeconfig.yaml
           echo "Kubeconfig saved."
 
       - name: Set KUBECONFIG
