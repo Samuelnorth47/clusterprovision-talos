@@ -5,6 +5,8 @@ cluster:
   network:        
     cni:
       name: none
+  proxy:
+      disabled: true
 machine:
   network:
     interfaces: 

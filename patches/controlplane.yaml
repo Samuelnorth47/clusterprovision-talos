@@ -3,7 +3,7 @@ cluster:
   network:
     cni:
       name: none
-    proxy:
+  proxy:
       disabled: true
   inlineManifests:
     - name: cilium
