@@ -153,16 +153,9 @@ jobs:
 
       - name: Retrieve kubeconfig
         run: |
-          talosctl kubeconfig ./kubeconfig.yaml --nodes ${{ env.bootstrap_ip }} --endpoints${{ env.bootstrap_ip }}:50000 --talosconfig ./talosconfig 
+          talosctl kubeconfig ~/.kube/config --nodes ${{ env.bootstrap_ip }} --endpoints${{ env.bootstrap_ip }}:50000 --talosconfig ./talosconfig --force
           echo "Kubeconfig saved."
 
-      - name: Set KUBECONFIG
+      - name: Export KUBECONFIG
         run: |
-          echo "export KUBECONFIG=$(pwd)/kubeconfig.yaml" >> $GITHUB_ENV
-
-      - name: Wait for Kubernetes nodes
-        run: |
-          until kubectl get nodes | grep Ready; do
-            echo "Waiting for kubernetes nodes"
-            sleep 10
-          done
+          export KUBECONFIG=~/.kube/config
