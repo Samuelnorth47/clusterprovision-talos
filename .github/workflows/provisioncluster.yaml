@@ -159,3 +159,26 @@ jobs:
       - name: Export KUBECONFIG
         run: |
           export KUBECONFIG=~/.kube/config
+ 
+  sync-cluster-configs:
+    needs: bootstrap-talos-cluster
+    runs-on: self-hosted
+    env:
+      FLUX_TOKEN: ${{ secrets.FLUX_TOKEN }} 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check Flux version
+        run: flux --version
+
+      - name: Export Github Token 
+        run: export GITHUB_TOKEN=${{ env.FLUX_TOKEN }}
+
+      - name: Bootstrap Flux
+        run: flux bootstrap github \
+             --owner=Samuelnorth47 \
+             --repository=cluster-configuration \
+             --path=clusters/test-cluster  \
+             --personal
+               
