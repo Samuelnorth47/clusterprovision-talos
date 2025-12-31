@@ -27,7 +27,7 @@ module "proxmox_talos_master_1" {
   disk_datastore = "local-lvm"
   disk_size      = "20"
   iso_storage    = "local"
-  memory_mb      = 2048
+  memory_mb      = 3072
   cores          = 2
   iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
@@ -40,7 +40,7 @@ module "proxmox_talos_master_2" {
   disk_datastore = "local-lvm"
   disk_size      = "20"
   iso_storage    = "local"
-  memory_mb      = 2048
+  memory_mb      = 3072
   cores          = 2
   iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
@@ -53,7 +53,7 @@ module "proxmox_talos_master_3" {
   disk_datastore = "local-lvm"
   disk_size      = "20"
   iso_storage    = "local"
-  memory_mb      = 2048
+  memory_mb      = 3072
   cores          = 2
   iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
@@ -66,7 +66,7 @@ module "proxmox_talos_worker_1" {
   disk_datastore = "local-lvm"
   disk_size      = "20"
   iso_storage    = "local"
-  memory_mb      = 2048
+  memory_mb      = 3072
   cores          = 2
   iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
@@ -79,7 +79,7 @@ module "proxmox_talos_worker_2" {
   disk_datastore = "local-lvm"
   disk_size      = "20"
   iso_storage    = "local"
-  memory_mb      = 2048
+  memory_mb      = 3072
   cores          = 2
   iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
@@ -92,7 +92,7 @@ module "proxmox_talos_worker_3" {
   disk_datastore = "local-lvm"
   disk_size      = "20"
   iso_storage    = "local"
-  memory_mb      = 2048
+  memory_mb      = 3072
   cores          = 2
   iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
