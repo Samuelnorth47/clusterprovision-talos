@@ -173,9 +173,5 @@ jobs:
         run: flux --version
 
       - name: Bootstrap Flux
-        run: flux bootstrap github \
-             --owner=Samuelnorth47 \
-             --repository=cluster-configuration \
-             --path=clusters/test-cluster  \
-             --personal
+        run: flux bootstrap github --owner=Samuelnorth47 --repository=cluster-configuration --path=clusters/test-cluster  --personal
                
