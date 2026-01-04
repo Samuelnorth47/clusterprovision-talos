@@ -6,6 +6,32 @@ on:
       - main
 
 jobs:
+  wakeup-homelab:
+    runs-on: self-hosted
+    env:
+      mercury_mac: ${{ secrets.MERCURY_MAC }}
+      venus_mac: ${{ secrets.VENUS_MAC }}
+      neptune_mac: ${{ secrets.NEPTUNE_MAC }}
+      pluto_mac: ${{ secrets.PLUTO_MAC }}
+      saturn_mac: ${{ secrets.SATURN_MAC }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check python version
+        run: python --version
+
+      - name: Install dependencies
+        working-directory: ./scripts
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: Wakeup Homelab Nodes
+        working-directory: ./scripts
+        run: |
+          python3 wakeuphomelab.py
+
   terraform:
     runs-on: self-hosted 
     env:
