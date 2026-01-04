@@ -33,6 +33,7 @@ jobs:
           python3 wakeuphomelab.py
 
   terraform:
+    needs: wakeup-homelab
     runs-on: self-hosted 
     env:
       TF_VAR_proxmox_node: mercury.proxmox.home.arpa
