@@ -43,6 +43,7 @@ def wake_host(name, mac):
 
 def main():
     for name, data in NODES.items():
+        wait = False
         ip = data["ip"]
         mac = data["mac"]
 
@@ -52,6 +53,11 @@ def main():
             print(f"[✓] {name} is already UP")
         else:
             wake_host(name, mac)
+            wait = True
+    
+    if wait:
+        print("[!] Waiting for hosts to wake up...")
+        time.sleep(30)
 
 if __name__ == "__main__":
     main()

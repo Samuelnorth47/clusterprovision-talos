@@ -31,7 +31,6 @@ jobs:
         working-directory: ./scripts
         run: |
           python3 wakeuphomelab.py
-          sleep 60  
 
   terraform:
     needs: wakeup-homelab
