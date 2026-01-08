@@ -1,8 +1,9 @@
 version: v1alpha1
 machine:
-  kubeprism:
-    enabled: true
-    port: 7445
+  features:
+    kubePrism:
+      enabled: true
+      port: 7445
   network:
     hostname: master-1
     interfaces:
