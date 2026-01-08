@@ -180,7 +180,7 @@ jobs:
 
       - name: Retrieve kubeconfig
         run: |
-          talosctl kubeconfig ~/.kube/config --nodes ${{ env.bootstrap_ip }} --endpoints${{ env.bootstrap_ip }}:50000 --talosconfig ./talosconfig --force
+          talosctl kubeconfig ~/.kube/config --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./talosconfig --force
           echo "Kubeconfig saved."
 
       - name: Export KUBECONFIG
