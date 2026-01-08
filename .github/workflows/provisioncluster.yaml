@@ -1,4 +1,4 @@
-name: "Terraform CI/CD"
+name: "Provisinion Talos Cluster"
 
 on:
   push:
@@ -31,6 +31,7 @@ jobs:
         working-directory: ./scripts
         run: |
           python3 wakeuphomelab.py
+          sleep 60  
 
   terraform:
     needs: wakeup-homelab

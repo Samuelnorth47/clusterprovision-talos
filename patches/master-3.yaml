@@ -1,8 +1,14 @@
 version: v1alpha1
 machine:
+  features:
+    kubeprism:
+      enabled: true
+      port: 7445
   network:
     hostname: master-3
     interfaces:
       - interface: ens18
         addresses:
           - 192.168.20.22/24 
+        vip:
+          ip: 192.168.20.100
