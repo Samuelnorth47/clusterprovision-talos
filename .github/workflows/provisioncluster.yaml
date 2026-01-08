@@ -76,7 +76,7 @@ jobs:
       proxmox_api_user: root@pam
       proxmox_api_token_id: terraform-token
       proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
-      bootstrap_ip: 192.168.30
+      bootstrap_ip: 192.168.20
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
