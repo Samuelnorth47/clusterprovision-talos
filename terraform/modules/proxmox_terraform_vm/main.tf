@@ -11,8 +11,11 @@ resource "proxmox_virtual_environment_vm" "vm" {
   node_name = var.node_name
 
   agent {
-    enabled = true
+    enabled = false
   }
+
+  stop_on_destroy = true
+
   memory {
     dedicated = var.memory_mb
     floating  = var.memory_mb
