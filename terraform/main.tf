@@ -1,5 +1,8 @@
 
 terraform {
+  backend "local" {
+    path = "/opt/actions-runner/terraform/terraform.tfstate"
+  }
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
