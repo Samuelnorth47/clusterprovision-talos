@@ -1,7 +1,7 @@
 
 terraform {
   backend "local" {
-    path = "/opt/actions-runner/_work/clusterprovision-talos/clusterprovision-talos/terraform.tfstate"
+    path = "/opt/terraform/terraform.tfstate"
   }
   required_providers {
     proxmox = {
