@@ -1,9 +1,2 @@
 secrets.yaml
 encodedsecrets.yaml
-testprovisioncluster.yaml
-.terraform/
-worker.yaml
-worker-1.yaml
-master-1.yaml
-controlplane.yaml
-talosconfig
