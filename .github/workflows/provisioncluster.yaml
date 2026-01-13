@@ -196,6 +196,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Export KUBECONFIG
+        run: |
+          export KUBECONFIG=/etc/kubernetes/config
         
       - name: Check flux version
         run: flux --version
