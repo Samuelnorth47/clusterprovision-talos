@@ -192,7 +192,7 @@ jobs:
     needs: bootstrap-talos-cluster
     runs-on: self-hosted
     env:
-      FLUX_PAT_SECRET: ${{ secrets.FLUX_PAT_SECRET }}
+       GITHUB_TOKEN: ${{ secrets.FLUX_PAT_SECRET }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -201,4 +201,4 @@ jobs:
         run: flux --version
         
       - name: Boostrap Cluster Configutation Repository 
-        run: flux bootstrap github --owner=Samuelnorth47 --repository=cluster-configuration --path=clusters/test-cluster --personal ${{ env.FLUX_PAT_SECRET }}  
+        run: flux bootstrap github --owner=Samuelnorth47 --repository=cluster-configuration --path=clusters/test-cluster --personal   
