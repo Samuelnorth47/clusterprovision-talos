@@ -176,7 +176,7 @@ jobs:
       - name: Bootstrap control plane
         run: |
           sleep 30
-          talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./machine-configs/talosconfig
+          talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} --talosconfig ./machine-configs/talosconfig
 
       - name: Retrieve kubeconfig
         working-directory: ./machine-configs
