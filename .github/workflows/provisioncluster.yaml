@@ -181,9 +181,24 @@ jobs:
       - name: Retrieve kubeconfig
         working-directory: ./machine-configs
         run: |
-          talosctl kubeconfig /etc/kubernetes/config --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./talosconfig --force
+          talosctl kubeconfig ~/.kube/config --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} --talosconfig ./talosconfig --force
           echo "Kubeconfig saved."
 
       - name: Export KUBECONFIG
         run: |
-          export KUBECONFIG=/etc/kubernetes/config
+          export KUBECONFIG=~/.kube/config
+
+  sync-cluster-configuration-flux:
+    needs: bootstrap-talos-cluster
+    runs-on: self-hosted
+    env:
+      FLUX_PAT_SECRET: ${{ secrets.FLUX_PAT_SECRET }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Check flux version
+        run: flux --version
+        
+      - name: Flux Boostrap Cluster Configutation Repository 
+        run: flux bootstrap github --owner=Samuelnorth47 --repository=cluster-configuration --path=clusters/test-cluster --personal ${{ env.FLUX_PAT_SECRET }}  
