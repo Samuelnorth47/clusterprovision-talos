@@ -200,5 +200,5 @@ jobs:
       - name: Check flux version
         run: flux --version
         
-      - name: Flux Boostrap Cluster Configutation Repository 
+      - name: Boostrap Cluster Configutation Repository 
         run: flux bootstrap github --owner=Samuelnorth47 --repository=cluster-configuration --path=clusters/test-cluster --personal ${{ env.FLUX_PAT_SECRET }}  
