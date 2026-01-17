@@ -199,6 +199,9 @@ jobs:
         
       - name: Check flux version
         run: flux --version
-        
+      
+      - name: Export Kubeconfig
+        run: export KUBECONFIG=/etc/kubernetes/config
+
       - name: Bootstrap Cluster Configuration Repository 
         run: flux bootstrap github --token-auth --owner=Samuelnorth47 --repository=cluster-configuration --path=clusters/test-cluster --personal 
