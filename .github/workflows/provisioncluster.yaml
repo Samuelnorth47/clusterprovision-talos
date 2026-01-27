@@ -191,18 +191,15 @@ jobs:
   sync-cluster-configuration-flux:
     needs: bootstrap-talos-cluster
     runs-on: self-hosted
-    env:
-      GITHUB_TOKEN: ${{ secrets.FLUX_PAT_SECRET }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Export KUBECONFIG
-        run: |
-          export KUBECONFIG=/etc/kubernetes/config
         
       - name: Check flux version
         run: flux --version
         
       - name: Bootstrap Cluster Configuration Repository 
-        run: flux bootstrap github --token-auth --owner=Samuelnorth47 --repository=cluster-configuration --path=clusters/test-cluster --personal 
+        env:
+          GITHUB_TOKEN: ${{ secrets.FLUX_PAT_SECRET }}
+          KUBECONFIG: /etc/kubernetes/config
+        run: flux bootstrap github --token-auth --owner=Samuelnorth47 --repository=cluster-configuration --path=clusters/test-cluster --personal --verbose
