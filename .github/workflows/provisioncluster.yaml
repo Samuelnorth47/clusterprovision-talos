@@ -197,7 +197,10 @@ jobs:
         
       - name: Check flux version
         run: flux --version
-        
+      
+      - name: Export Kubeconfig
+        run: export KUBECONFIG=/etc/kubernetes/config
+
       - name: Bootstrap Cluster Configuration Repository 
         env:
           GITHUB_TOKEN: ${{ secrets.FLUX_PAT_SECRET }}
