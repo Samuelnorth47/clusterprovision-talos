@@ -184,10 +184,6 @@ jobs:
           talosctl kubeconfig /etc/kubernetes/config --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./talosconfig --force
           echo "Kubeconfig saved."
 
-      - name: Export KUBECONFIG
-        run: |
-          export KUBECONFIG=/etc/kubernetes/config
-
   sync-cluster-configuration-flux:
     needs: bootstrap-talos-cluster
     runs-on: self-hosted
@@ -198,11 +194,13 @@ jobs:
       - name: Check flux version
         run: flux --version
       
-      - name: Export Kubeconfig
-        run: export KUBECONFIG=/etc/kubernetes/config
+      - name: Set KUBECONFIG
+        run: echo "KUBECONFIG=/etc/kubernetes/config" >> $GITHUB_ENV
+
+      - name: Verify cluster access
+        run: kubectl get nodes
 
       - name: Bootstrap Cluster Configuration Repository 
         env:
           GITHUB_TOKEN: ${{ secrets.FLUX_PAT_SECRET }}
-          KUBECONFIG: /etc/kubernetes/config
         run: flux bootstrap github --token-auth --owner=Samuelnorth47 --repository=cluster-configuration --path=clusters/test-cluster --personal --verbose
