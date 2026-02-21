@@ -29,11 +29,10 @@ module "proxmox_talos_master_1" {
   node_name      = "venus"
   disk_datastore = "local-lvm"
   disk_size      = "20"
-  iso_storage    = "local"
   memory_mb      = 13312
   cores          = 7
-  iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
+  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
 }
 
 module "proxmox_talos_master_2" {
@@ -42,11 +41,10 @@ module "proxmox_talos_master_2" {
   node_name      = "saturn"
   disk_datastore = "local-lvm"
   disk_size      = "20"
-  iso_storage    = "local"
   memory_mb      = 13312
   cores          = 11
-  iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
+  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
 }
 
 module "proxmox_talos_master_3" {
@@ -55,11 +53,10 @@ module "proxmox_talos_master_3" {
   node_name      = "mercury"
   disk_datastore = "local-lvm"
   disk_size      = "20"
-  iso_storage    = "local"
   memory_mb      = 10240
   cores          = 6
-  iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
+  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
 }
 
 module "proxmox_talos_worker_1" {
@@ -68,11 +65,10 @@ module "proxmox_talos_worker_1" {
   node_name      = "mercury"
   disk_datastore = "local-lvm"
   disk_size      = "20"
-  iso_storage    = "local"
   memory_mb      = 10240
   cores          = 5
-  iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
+  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
 }
 
 module "proxmox_talos_worker_2" {
@@ -81,11 +77,10 @@ module "proxmox_talos_worker_2" {
   node_name      = "neptune"
   disk_datastore = "local-lvm"
   disk_size      = "20"
-  iso_storage    = "local"
   memory_mb      = 6144
   cores          = 7
-  iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
+  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
 }
 
 module "proxmox_talos_worker_3" {
@@ -94,10 +89,9 @@ module "proxmox_talos_worker_3" {
   node_name      = "pluto"
   disk_datastore = "local-lvm"
   disk_size      = "20"
-  iso_storage    = "local"
   memory_mb      = 6144
   cores          = 5
-  iso_file       = "metal-amd64-qemu-agent.iso"
   bridge         = "vmbr0"
+  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
 }
 

@@ -7,9 +7,8 @@ variable "vms" {
     cores          = number
     disk_datastore = string
     disk_size_gb   = number
-    iso_storage    = string
-    iso_filename   = string
     bridge         = string
+    iso_download_url = string
   }))
 
   default = {
@@ -20,9 +19,8 @@ variable "vms" {
       cores          = 2
       disk_datastore = "local-lvm"
       disk_size_gb   = 20
-      iso_storage    = "local"
-      iso_filename   = "metal-amd64.iso"
       bridge         = "vmbr0"
+      iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
     }
   }
 }

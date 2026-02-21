@@ -7,3 +7,4 @@ variable "disk_size" { type = string }
 variable "iso_storage" { type = string }
 variable "iso_file" { type = string }
 variable "bridge" { type = string }
+variable "iso_download_url" { type = string }

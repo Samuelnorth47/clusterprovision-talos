@@ -30,7 +30,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 
   cdrom {
-    file_id = "${var.iso_storage}:iso/${var.iso_file}"
+    file_id = proxmox_virtual_environment_download_file.talos_iso.file_id
   }
 
   network_device {
@@ -39,3 +39,9 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 }
 
+resource "proxmox_virtual_environment_download_file" "talos_iso" {
+  content_type = "iso"
+  datastore_id = "local"
+  node_name    = var.node_name
+  url          = var.iso_download_url
+}
