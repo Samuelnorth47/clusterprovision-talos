@@ -1,2 +1,2 @@
 # clusterprovision-talos
-Repo to provision and bootstrap Talos cluster.
+Repo to provision and bootstrap Talos cluster
