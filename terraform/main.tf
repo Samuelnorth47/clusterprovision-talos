@@ -8,6 +8,10 @@ terraform {
       source  = "bpg/proxmox"
       version = "~> 0.75.0"
     }
+    talos = {
+      source = "siderolabs/talos"
+      version = "0.10.1"
+    }
   }
 }
 
@@ -95,3 +99,6 @@ module "proxmox_talos_worker_3" {
   iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
 }
 
+provider "talos" {
+
+}
