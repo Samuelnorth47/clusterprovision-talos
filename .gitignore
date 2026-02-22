@@ -1,2 +1,4 @@
 secrets.yaml
 encodedsecrets.yaml
+secrets.tfvars
+backend.conf
