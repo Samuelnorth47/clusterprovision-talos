@@ -4,7 +4,7 @@ terraform {
     bucket = "terraform-state-backend"
     key    = "talos-cluster/terraform.tfstate"
     region = "auto"
-    
+
     # Custom R2 Endpoint
     endpoints = {
       s3 = "https://5cd98fb1b747655ecb07625e3870415c.r2.cloudflarestorage.com"

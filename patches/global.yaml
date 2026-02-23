@@ -6,11 +6,15 @@ machine:
     bootloader: true
     wipe: true
   network:
+    hostname: 
     interfaces: 
       - interface: ens18
+        dhcp: true
         routes:
           - network: 0.0.0.0/0
             gateway: 192.168.20.1
+        vip:
+          ip: 192.168.20.30
     nameservers:
       - 192.168.20.1
       - 1.1.1.1

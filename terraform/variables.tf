@@ -2,25 +2,25 @@
 variable "vms" {
   description = "Map of VMs to create"
   type = map(object({
-    name           = string
-    node_name      = string
-    memory_mb      = number
-    cores          = number
-    disk_datastore = string
-    disk_size_gb   = number
-    bridge         = string
+    name             = string
+    node_name        = string
+    memory_mb        = number
+    cores            = number
+    disk_datastore   = string
+    disk_size        = number
+    bridge           = string
     iso_download_url = string
   }))
 
   default = {
     "talos-node-0" = {
-      name           = "talos-node-0"
-      node_name      = "mercury"
-      memory_mb      = 2048
-      cores          = 2
-      disk_datastore = "local-lvm"
-      disk_size_gb   = 20
-      bridge         = "vmbr0"
+      name             = "talos-node-0"
+      node_name        = "mercury"
+      memory_mb        = 2048
+      cores            = 2
+      disk_datastore   = "local-lvm"
+      disk_size        = 20
+      bridge           = "vmbr0"
       iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
     }
   }
@@ -69,50 +69,41 @@ variable "proxmox_ssh_username" {
   default     = "root"
 }
 
-# Talos
-variable "cluster_name" {
-  description = "A name to provide for the Talos cluster"
-  type        = string
+# --- Proxmox Globals ---
+variable "disk_datastore" { type = string }
+variable "bridge" { type = string }
+variable "disk_size" { type = string }
+variable "iso_url" { type = string }
+
+# --- Cluster Globals ---
+variable "cluster_name" { type = string }
+variable "cluster_endpoint" { type = string }
+variable "cluster_vip" { type = string }
+
+# --- Talos Config Globals ---
+variable "install_disk" { type = string }
+variable "schematic_id" { type = string }
+variable "talos_version" { type = string }
+variable "network_interface" { type = string }
+variable "gateway" { type = string }
+variable "nameservers" { type = list(string) }
+variable "search_domains" { type = list(string) }
+# --- Node Maps ---
+
+variable "cp_nodes" {
+  description = "Map of control plane nodes"
+  type = map(object({
+    node_name = string # The Proxmox Target Node (e.g., venus, saturn)
+    memory_mb = number
+    cores     = number
+  }))
 }
 
-variable "cluster_endpoint" {
-  description = "The endpoint for the Talos cluster"
-  type        = string
-}
-
-variable "node_data" {
-  description = "A map of node data"
-  type = object({
-    controlplanes = map(object({
-      install_disk = string
-      hostname     = optional(string)
-    }))
-    workers = map(object({
-      install_disk = string
-      hostname     = optional(string)
-    }))
-  })
-  default = {
-    controlplanes = {
-      "10.5.0.2" = {
-        install_disk = "/dev/sda"
-      },
-      "10.5.0.3" = {
-        install_disk = "/dev/sda"
-      },
-      "10.5.0.4" = {
-        install_disk = "/dev/sda"
-      }
-    }
-    workers = {
-      "10.5.0.5" = {
-        install_disk = "/dev/nvme0n1"
-        hostname     = "worker-1"
-      },
-      "10.5.0.6" = {
-        install_disk = "/dev/nvme0n1"
-        hostname     = "worker-2"
-      }
-    }
-  }
+variable "worker_nodes" {
+  description = "Map of worker nodes"
+  type = map(object({
+    node_name = string
+    memory_mb = number
+    cores     = number
+  }))
 }

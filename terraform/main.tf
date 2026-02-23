@@ -1,73 +1,27 @@
-module "proxmox_talos_master_1" {
-  source         = "./modules/proxmox_terraform_vm"
-  name           = "master-1"
-  node_name      = "venus"
-  disk_datastore = "local-lvm"
-  disk_size      = "20"
-  memory_mb      = 13312
-  cores          = 7
-  bridge         = "vmbr0"
-  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
+module "talos_cp_nodes" {
+  source           = "./modules/proxmox_terraform_vm"
+  for_each         = var.cp_nodes
+  name             = each.key
+  node_name        = each.value.node_name
+  cores            = each.value.cores
+  memory_mb        = each.value.memory_mb
+  bridge           = var.bridge
+  iso_download_url = var.iso_url
+  disk_size        = var.disk_size
+  disk_datastore   = var.disk_datastore
 }
 
-module "proxmox_talos_master_2" {
-  source         = "./modules/proxmox_terraform_vm"
-  name           = "master-2"
-  node_name      = "saturn"
-  disk_datastore = "local-lvm"
-  disk_size      = "20"
-  memory_mb      = 13312
-  cores          = 11
-  bridge         = "vmbr0"
-  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
-}
-
-module "proxmox_talos_master_3" {
-  source         = "./modules/proxmox_terraform_vm"
-  name           = "master-3"
-  node_name      = "mercury"
-  disk_datastore = "local-lvm"
-  disk_size      = "20"
-  memory_mb      = 10240
-  cores          = 6
-  bridge         = "vmbr0"
-  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
-}
-
-module "proxmox_talos_worker_1" {
-  source         = "./modules/proxmox_terraform_vm"
-  name           = "worker-1"
-  node_name      = "mercury"
-  disk_datastore = "local-lvm"
-  disk_size      = "20"
-  memory_mb      = 10240
-  cores          = 5
-  bridge         = "vmbr0"
-  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
-}
-
-module "proxmox_talos_worker_2" {
-  source         = "./modules/proxmox_terraform_vm"
-  name           = "worker-2"
-  node_name      = "neptune"
-  disk_datastore = "local-lvm"
-  disk_size      = "20"
-  memory_mb      = 6144
-  cores          = 7
-  bridge         = "vmbr0"
-  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
-}
-
-module "proxmox_talos_worker_3" {
-  source         = "./modules/proxmox_terraform_vm"
-  name           = "worker-3"
-  node_name      = "pluto"
-  disk_datastore = "local-lvm"
-  disk_size      = "20"
-  memory_mb      = 6144
-  cores          = 5
-  bridge         = "vmbr0"
-  iso_download_url = "https://factory.talos.dev/image/914b38adefad3d77212f565745ed52013bf3a424e7da2730e9e7dad8ee297342/v1.12.4/metal-amd64.iso"
+module "talos_worker_nodes" {
+  source           = "./modules/proxmox_terraform_vm"
+  for_each         = var.worker_nodes
+  name             = each.key
+  node_name        = each.value.node_name
+  cores            = each.value.cores
+  memory_mb        = each.value.memory_mb
+  bridge           = var.bridge
+  iso_download_url = var.iso_url
+  disk_size        = var.disk_size
+  disk_datastore   = var.disk_datastore
 }
 
 resource "talos_machine_secrets" "this" {}
@@ -89,32 +43,46 @@ data "talos_machine_configuration" "worker" {
 data "talos_client_configuration" "this" {
   cluster_name         = var.cluster_name
   client_configuration = talos_machine_secrets.this.client_configuration
-  endpoints            = [for k, v in var.node_data.controlplanes : k]
+  nodes                = [for k, v in var.cp_nodes : k]
 }
 
 resource "talos_machine_configuration_apply" "controlplane" {
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
-  for_each                    = var.node_data.controlplanes
-  node                        = each.key
+  for_each                    = module.talos_cp_nodes
+  node                        = each.value.vm_ipv4_addresses[0]
   config_patches = [
-    templatefile("${path.module}/templates/install-disk-and-hostname.yaml.tmpl", {
-      hostname     = each.value.hostname == null ? format("%s-cp-%s", var.cluster_name, index(keys(var.node_data.controlplanes), each.key)) : each.value.hostname
-      install_disk = each.value.install_disk
+    templatefile("${path.module}/templates/global.yaml.tmpl", {
+      hostname          = each.key
+      install_disk      = var.install_disk
+      gateway           = var.gateway
+      cluster_vip       = var.cluster_vip
+      schematic_id      = var.schematic_id
+      talos_version     = var.talos_version
+      network_interface = var.network_interface
+      nameservers       = var.nameservers
+      search_domains    = var.search_domains
     }),
-    file("${path.module}/files/cp-scheduling.yaml"),
+    file("${path.module}/files/cp.yaml"),
   ]
 }
 
 resource "talos_machine_configuration_apply" "worker" {
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
-  for_each                    = var.node_data.workers
-  node                        = each.key
+  for_each                    = module.talos_worker_nodes
+  node                        = each.value.vm_ipv4_addresses[0]
   config_patches = [
-    templatefile("${path.module}/templates/install-disk-and-hostname.yaml.tmpl", {
-      hostname     = each.value.hostname == null ? format("%s-worker-%s", var.cluster_name, index(keys(var.node_data.workers), each.key)) : each.value.hostname
-      install_disk = each.value.install_disk
+    templatefile("${path.module}/templates/global.yaml.tmpl", {
+      hostname          = each.key
+      install_disk      = var.install_disk
+      gateway           = var.gateway
+      cluster_vip       = var.cluster_vip
+      schematic_id      = var.schematic_id
+      talos_version     = var.talos_version
+      network_interface = var.network_interface
+      nameservers       = var.nameservers
+      search_domains    = var.search_domains
     })
   ]
 }
@@ -123,11 +91,11 @@ resource "talos_machine_bootstrap" "this" {
   depends_on = [talos_machine_configuration_apply.controlplane]
 
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = [for k, v in var.node_data.controlplanes : k][0]
+  node                 = [for k, v in var.cp_nodes : k][0]
 }
 
 resource "talos_cluster_kubeconfig" "this" {
   depends_on           = [talos_machine_bootstrap.this]
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = [for k, v in var.node_data.controlplanes : k][0]
+  node                 = [for k, v in var.cp_nodes : k][0]
 }

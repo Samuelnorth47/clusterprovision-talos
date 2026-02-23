@@ -30,7 +30,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 
   cdrom {
-    file_id = proxmox_virtual_environment_download_file.talos_iso.file_id
+    file_id = proxmox_virtual_environment_download_file.talos_iso.id
   }
 
   network_device {
