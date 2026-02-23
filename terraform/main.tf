@@ -99,3 +99,13 @@ resource "talos_cluster_kubeconfig" "this" {
   client_configuration = talos_machine_secrets.this.client_configuration
   node = module.talos_cp_nodes[keys(var.cp_nodes)[0]].vm_ipv4_addresses[0]
 }
+
+resource "local_sensitive_file" "talosconfig" {
+  content  = data.talos_client_configuration.this.talos_config
+  filename = "/opt/kubernetes/talosconfig"
+}
+
+resource "local_sensitive_file" "kubeconfig" {
+  content  = talos_cluster_kubeconfig.this.kubeconfig_raw
+  filename = "/opt/kubernetes/kubeconfig"
+}
