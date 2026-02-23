@@ -43,7 +43,7 @@ data "talos_machine_configuration" "worker" {
 data "talos_client_configuration" "this" {
   cluster_name         = var.cluster_name
   client_configuration = talos_machine_secrets.this.client_configuration
-  nodes                = [for k, v in var.cp_nodes : k]
+  nodes = [for node in module.talos_cp_nodes : node.vm_ipv4_addresses[0]]
 }
 
 resource "talos_machine_configuration_apply" "controlplane" {
@@ -91,11 +91,11 @@ resource "talos_machine_bootstrap" "this" {
   depends_on = [talos_machine_configuration_apply.controlplane]
 
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = [for k, v in var.cp_nodes : k][0]
+  node = module.talos_cp_nodes[keys(var.cp_nodes)[0]].vm_ipv4_addresses[0]
 }
 
 resource "talos_cluster_kubeconfig" "this" {
   depends_on           = [talos_machine_bootstrap.this]
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = [for k, v in var.cp_nodes : k][0]
+  node = module.talos_cp_nodes[keys(var.cp_nodes)[0]].vm_ipv4_addresses[0]
 }
