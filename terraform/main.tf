@@ -62,6 +62,9 @@ resource "talos_machine_configuration_apply" "controlplane" {
       network_interface = var.network_interface
       nameservers       = var.nameservers
       search_domains    = var.search_domains
+      labels            = length(keys(lookup(each.value, "labels", {}))) > 0 ?
+                          "   " + replace(trimspace(yamlencode(lookup(each.value, "labels", {}))), "\n", "\n    ") :
+                          ""
     }),
     file("${path.module}/files/cp.yaml"),
   ]
