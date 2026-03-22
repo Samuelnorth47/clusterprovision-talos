@@ -16,3 +16,5 @@ machine:
           ip: ${cluster_vip} 
     nameservers: ${jsonencode(nameservers)}
     searchDomains: ${jsonencode(search_domains)}
+  nodeLabels:
+${labels}
