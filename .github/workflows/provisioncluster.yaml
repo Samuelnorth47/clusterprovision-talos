@@ -1,7 +1,7 @@
 name: "Provisinion Talos Cluster"
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
