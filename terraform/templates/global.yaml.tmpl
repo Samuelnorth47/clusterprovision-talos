@@ -1,0 +1,25 @@
+network:
+    cni:
+      name: none
+  proxy:
+    disabled: true
+machine:
+  install:
+    disk: ${install_disk}
+    image: factory.talos.dev/installer/${schematic_id}:v${talos_version}
+    bootloader: true
+    wipe: true
+  network:
+    hostname: ${hostname} 
+    interfaces: 
+      - interface: ${network_interface}
+        dhcp: true
+        routes:
+          - network: 0.0.0.0/0
+            gateway: ${gateway} 
+        vip:
+          ip: ${cluster_vip} 
+    nameservers: ${jsonencode(nameservers)}
+    searchDomains: ${jsonencode(search_domains)}
+  nodeLabels:
+${labels}

@@ -6,45 +6,46 @@ on:
       - main
 
 jobs:
-  wakeup-homelab:
-    runs-on: self-hosted
-    env:
-      mercury_mac: ${{ secrets.MERCURY_MAC }}
-      venus_mac: ${{ secrets.VENUS_MAC }}
-      neptune_mac: ${{ secrets.NEPTUNE_MAC }}
-      pluto_mac: ${{ secrets.PLUTO_MAC }}
-      saturn_mac: ${{ secrets.SATURN_MAC }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # wakeup-homelab:
+  #   runs-on: self-hosted
+  #   env:
+  #     mercury_mac: ${{ secrets.MERCURY_MAC }}
+  #     venus_mac: ${{ secrets.VENUS_MAC }}
+  #     neptune_mac: ${{ secrets.NEPTUNE_MAC }}
+  #     pluto_mac: ${{ secrets.PLUTO_MAC }}
+  #     saturn_mac: ${{ secrets.SATURN_MAC }}
+  #     RUN_WAKEUP: false
+  #   if: ${{ env.RUN_WAKEUP == 'true' }}
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Check python version
-        run: python --version
+  #     - name: Check python version
+  #       run: python --version
 
-      - name: Install dependencies
-        working-directory: ./scripts
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt
+  #     - name: Install dependencies
+  #       working-directory: ./scripts
+  #       run: |
+  #         python -m pip install --upgrade pip setuptools wheel
+  #         pip install -r requirements.txt
 
-      - name: Wakeup Homelab Nodes
-        working-directory: ./scripts
-        run: |
-          python3 wakeuphomelab.py
+  #     - name: Wakeup Homelab Nodes
+  #       working-directory: ./scripts
+  #       run: |
+  #         python3 wakeuphomelab.py
 
   terraform:
-    needs: wakeup-homelab
+    # needs: wakeup-homelab
     runs-on: self-hosted 
     env:
       TF_VAR_proxmox_node: mercury.proxmox.home.arpa
       TF_VAR_proxmox_api_user: root@pam
       TF_VAR_proxmox_api_token_id: terraform-token
       TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
-      proxmox_node: mercury.proxmox.home.arpa
-      proxmox_api_user: root@pam
-      proxmox_api_token_id: terraform-token
-      proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
-      
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: "auto"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -62,127 +63,20 @@ jobs:
         working-directory: ./terraform
         run: terraform fmt --recursive -check && terraform validate
 
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan -input=false
+
+      - name: Save Plan as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-binary-plan  
+          path: ./terraform/tfplan     
+          retention-days: 7
+
       - name: Terraform Apply
         working-directory: ./terraform
         run: terraform apply -input=false -auto-approve
   
-  bootstrap-talos-cluster:
-    needs: terraform
-    runs-on: self-hosted
-    env:
-      TALOS_CLUSTER_NAME: test-cluster
-      TALOS_CONTROL_PLANE_ENDPOINT: https://api.test-cluster.home.arpa:6443
-      proxmox_node: mercury.proxmox.home.arpa
-      proxmox_api_user: root@pam
-      proxmox_api_token_id: terraform-token
-      proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
-      bootstrap_ip: 192.168.20.20
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      
-      - name: Check python version
-        run: python --version
-
-      - name: Install dependencies
-        working-directory: ./scripts
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt
-
-      - name: VM IP Output
-        working-directory: ./scripts
-        run: python3 get_vm_ips.py
-
-      - name: Generate talos secrets
-        run: talosctl gen secrets -o secrets.yaml
-
-      - name: Generate machine configs with patches
-        run: |
-
-          talosctl gen config  \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-          --with-secrets secrets.yaml \
-          --config-patch @patches/global.yaml \
-          --output-types talosconfig \
-          --output ./machine-configs/talosconfig \
-         
-
-          talosctl gen config \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-          --with-secrets secrets.yaml \
-          --config-patch @patches/global.yaml \
-          --config-patch-control-plane @patches/master-1.yaml \
-          --output-types controlplane \
-          --output ./machine-configs/master-1.yaml 
-
-          talosctl gen config \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-          --with-secrets secrets.yaml \
-          --config-patch @patches/global.yaml \
-          --config-patch-control-plane @patches/master-2.yaml \
-          --output-types controlplane \
-          --output ./machine-configs/master-2.yaml 
-
-          talosctl gen config \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-          --with-secrets secrets.yaml \
-          --config-patch @patches/global.yaml \
-          --config-patch-control-plane @patches/master-3.yaml \
-          --output-types controlplane \
-          --output ./machine-configs/master-3.yaml 
-          
-          talosctl gen config \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-          --with-secrets secrets.yaml \
-          --config-patch @patches/global.yaml \
-          --config-patch-worker @patches/worker-1.yaml \
-          --output-types worker \
-          --output ./machine-configs/worker-1.yaml 
-          
-          talosctl gen config \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-          --with-secrets secrets.yaml \
-          --config-patch @patches/global.yaml \
-          --config-patch-worker @patches/worker-2.yaml \
-          --output-types worker \
-          --output ./machine-configs/worker-2.yaml 
-
-          talosctl gen config \
-          ${{ env.TALOS_CLUSTER_NAME }} \
-          ${{ env.TALOS_CONTROL_PLANE_ENDPOINT }} \
-          --with-secrets secrets.yaml \
-          --config-patch @patches/global.yaml \
-          --config-patch-worker @patches/worker-3.yaml \
-          --output-types worker \
-          --output ./machine-configs/worker-3.yaml 
-
-      - name: Apply machine configs
-        working-directory: ./machine-configs
-        run: |
-          talosctl apply-config --insecure --nodes ${{ env.master-1_IP }} --file master-1.yaml
-          talosctl apply-config --insecure --nodes ${{ env.master-2_IP }} --file master-2.yaml
-          talosctl apply-config --insecure --nodes ${{ env.master-3_IP }} --file master-3.yaml
-          talosctl apply-config --insecure --nodes ${{ env.worker-1_IP }} --file worker-1.yaml
-          talosctl apply-config --insecure --nodes ${{ env.worker-2_IP }} --file worker-2.yaml
-          talosctl apply-config --insecure --nodes ${{ env.worker-3_IP }} --file worker-3.yaml
-
-      - name: Bootstrap control plane
-        run: |
-          sleep 30
-          talosctl bootstrap --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./machine-configs/talosconfig
-
-      - name: Retrieve kubeconfig
-        working-directory: ./machine-configs
-        run: |
-          talosctl kubeconfig /etc/kubernetes/config --nodes ${{ env.bootstrap_ip }} --endpoints ${{ env.bootstrap_ip }}:50000 --talosconfig ./talosconfig --force
-          echo "Kubeconfig saved."
 
   sync-cluster-configuration-flux:
     needs: bootstrap-talos-cluster

@@ -1,2 +1,10 @@
 secrets.yaml
 encodedsecrets.yaml
+secrets.tfvars
+backend.conf
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+secrets.tfvars
